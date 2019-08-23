@@ -64,8 +64,16 @@ install:	$(INSTALL_32_and_64)
 test:		$(TEST_32_and_64)
 
 # Build dependencies
-# The tests need an ISO-8859-1 locale to run in
-REQUIRED_PACKAGES += locale/en-extra
+#
+# The tests need an ISO-8859-1 locale to run in, a french ISO-8859-1 locale,
+# and czech, french, german, greek, swedish, and turkish locales for i18n tests.
+REQUIRED_PACKAGES += locale/cs
+REQUIRED_PACKAGES += locale/de
+REQUIRED_PACKAGES += locale/el
+REQUIRED_PACKAGES += locale/fr
+REQUIRED_PACKAGES += locale/fr-extra
+REQUIRED_PACKAGES += locale/sv
+REQUIRED_PACKAGES += locale/tr
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += library/gc

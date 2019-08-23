@@ -1,0 +1,175 @@
+diff -ru guile-2.2.6.orig/test-suite/tests/encoding-escapes.test guile-2.2.6/test-suite/tests/encoding-escapes.test
+--- guile-2.2.6.orig/test-suite/tests/encoding-escapes.test	2011-11-22 05:54:38.000000000 +0000
++++ guile-2.2.6/test-suite/tests/encoding-escapes.test	2019-08-23 20:49:53.982320842 +0000
+@@ -163,12 +163,12 @@
+ (with-test-prefix "input escapes"
+ 
+   (pass-if "última"
+-    (with-locale "en_US.utf8"
++    (with-locale "en_US.UTF-8"
+                  (string=? "última"
+                            (with-input-from-string "\"\\xfaltima\"" read))))
+ 
+   (pass-if "羅生門"
+-    (with-locale "en_US.utf8"
++    (with-locale "en_US.UTF-8"
+                  (string=? "羅生門"
+                            (with-input-from-string 
+                                "\"\\u7F85\\u751F\\u9580\"" read)))))
+diff -ru guile-2.2.6.orig/test-suite/tests/i18n.test guile-2.2.6/test-suite/tests/i18n.test
+--- guile-2.2.6.orig/test-suite/tests/i18n.test	2019-06-04 15:24:01.000000000 +0000
++++ guile-2.2.6/test-suite/tests/i18n.test	2019-08-23 20:51:04.757968789 +0000
+@@ -93,7 +93,7 @@
+ (define %french-locale-name
+   (if mingw?
+       "fra_FRA.850"
+-      "fr_FR.iso88591"))         ;"iso88591" is the "normalized codeset"
++      "fr_FR.ISO8859-1"))         ;"iso88591" is the "normalized codeset"
+ 
+ ;; What we really want for the following locales is that they be Unicode
+ ;; capable, not necessarily UTF-8, which Windows does not provide.
+@@ -101,25 +101,25 @@
+ (define %french-utf8-locale-name
+   (if mingw?
+       "fra_FRA.1252"
+-      "fr_FR.utf8"))                 ;"utf8" is the "normalized codeset"
++      "fr_FR.UTF-8"))                 ;"utf8" is the "normalized codeset"
+ 
+ (define %turkish-utf8-locale-name
+   (if mingw?
+       "tur_TRK.1254"
+-      "tr_TR.utf8"))
++      "tr_TR.UTF-8"))
+ 
+ (define %german-utf8-locale-name
+   (if mingw?
+       "deu_DEU.1252"
+-      "de_DE.utf8"))
++      "de_DE.UTF-8"))
+ 
+ (define %greek-utf8-locale-name
+   (if mingw?
+       "grc_ELL.1253"
+-      "el_GR.utf8"))
++      "el_GR.UTF-8"))
+ 
+ (define %american-english-locale-name
+-  "en_US.utf8")
++  "en_US.UTF-8")
+ 
+ (define %french-locale
+   (false-if-exception
+@@ -282,7 +282,7 @@
+ 
+   (pass-if "string-locale<? for 'ch'"
+     (under-locale-or-unresolved
+-     "cs_CZ.utf8"
++     "cs_CZ.UTF-8"
+      (lambda ()
+        ;; Czech sorts digraph 'ch' between 'h' and 'i'.
+        ;;
+diff -ru guile-2.2.6.orig/test-suite/tests/records.test guile-2.2.6/test-suite/tests/records.test
+--- guile-2.2.6.orig/test-suite/tests/records.test	2011-11-22 05:54:38.000000000 +0000
++++ guile-2.2.6/test-suite/tests/records.test	2019-08-23 20:49:44.068110713 +0000
+@@ -84,7 +84,7 @@
+                   (lambda () (display (make-foo 1 2))))))
+ 
+     (pass-if "fŏŏ"
+-      (with-locale "en_US.utf8"
++      (with-locale "en_US.UTF-8"
+         (string-prefix? "#<fŏŏ"
+                         (with-output-to-string
+                           (lambda () (display (make-fŏŏ 1 2)))))))))
+diff -ru guile-2.2.6.orig/test-suite/tests/regexp.test guile-2.2.6/test-suite/tests/regexp.test
+--- guile-2.2.6.orig/test-suite/tests/regexp.test	2014-02-22 04:56:32.000000000 +0000
++++ guile-2.2.6/test-suite/tests/regexp.test	2019-08-23 20:43:32.014233934 +0000
+@@ -280,13 +280,13 @@
+ 
+ (with-test-prefix "nonascii locales"
+   (pass-if "match structures refer to char offsets"
+-    (with-locale "en_US.utf8"
++    (with-locale "en_US.UTF-8"
+       ;; bug #31650
+       (equal? (match:substring (string-match ".*" "calçot") 0)
+               "calçot")))
+ 
+   (pass-if "match structures refer to char offsets, non-ASCII pattern"
+-    (with-locale "en_US.utf8"
++    (with-locale "en_US.UTF-8"
+       ;; bug #31650
+       (equal? (match:substring (string-match "λ: The Ultimate (.*)"
+                                              "λ: The Ultimate GOTO")
+diff -ru guile-2.2.6.orig/test-suite/tests/time.test guile-2.2.6/test-suite/tests/time.test
+--- guile-2.2.6.orig/test-suite/tests/time.test	2019-06-30 15:31:24.000000000 +0000
++++ guile-2.2.6/test-suite/tests/time.test	2019-08-23 20:51:17.038092629 +0000
+@@ -204,7 +204,7 @@
+ 
+   (pass-if-equal "strftime passes wide characters"
+       "\u0100"
+-    (with-locale "en_US.utf8"
++    (with-locale "en_US.UTF-8"
+                  (let ((t (localtime (current-time))))
+                    (substring (strftime "\u0100%Z" t) 0 1))))
+ 
+@@ -232,14 +232,14 @@
+         (let ((tm (localtime 86400)))
+           (strftime "%z" tm))))
+ 
+-    (pass-if-equal "strftime fr_FR.utf8"
++    (pass-if-equal "strftime fr_FR.UTF-8"
+         " 1 février 1970"
+-      (with-locale "fr_FR.utf8"
++      (with-locale "fr_FR.UTF-8"
+                    (strftime "%e %B %Y" (gmtime (* 31 24 3600)))))
+ 
+-    (pass-if-equal "strftime fr_FR.iso88591" ;<https://bugs.gnu.org/35920>
++    (pass-if-equal "strftime fr_FR.ISO8859-1" ;<https://bugs.gnu.org/35920>
+         " 1 février 1970"
+-      (with-locale "fr_FR.iso88591"
++      (with-locale "fr_FR.ISO8859-1"
+                    (strftime "%e %B %Y" (gmtime (* 31 24 3600)))))))
+ 
+ ;;;
+@@ -272,17 +272,17 @@
+       (let ((tm (car (strptime "%s" "86400"))))
+ 	(eqv? 0 (tm:gmtoff tm))))
+ 
+-    (pass-if-equal "strftime fr_FR.utf8"
++    (pass-if-equal "strftime fr_FR.UTF-8"
+         '(1 2 1999)
+-      (with-locale "fr_FR.utf8"
++      (with-locale "fr_FR.UTF-8"
+                    (let ((tm (car (strptime "%e %B %Y" " 1 février 1999"))))
+                      (list (tm:mday tm)
+                            (+ 1 (tm:mon tm))
+                            (+ 1900 (tm:year tm))))))
+ 
+-    (pass-if-equal "strftime fr_FR.iso88591" ;<https://bugs.gnu.org/35920>
++    (pass-if-equal "strftime fr_FR.ISO8859-1" ;<https://bugs.gnu.org/35920>
+         '(1 2 1999)
+-      (with-locale "fr_FR.iso88591"
++      (with-locale "fr_FR.ISO8859-1"
+                    (let ((tm (car (strptime "%e %B %Y" " 1 février 1999"))))
+                      (list (tm:mday tm)
+                            (+ 1 (tm:mon tm))
+diff -ru guile-2.2.6.orig/test-suite/tests/web-uri.test guile-2.2.6/test-suite/tests/web-uri.test
+--- guile-2.2.6.orig/test-suite/tests/web-uri.test	2019-06-04 15:24:02.000000000 +0000
++++ guile-2.2.6/test-suite/tests/web-uri.test	2019-08-23 20:50:04.825653017 +0000
+@@ -131,7 +131,7 @@
+                          (dynamic-wind
+                            (lambda () #t)
+                            (lambda ()
+-                             (with-locale "en_US.utf8"
++                             (with-locale "en_US.UTF-8"
+                                (reload-module (resolve-module '(web uri)))
+                                (build-uri 'http #:host "illégal.com")))
+                            (lambda ()
+@@ -312,7 +312,7 @@
+     (dynamic-wind
+       (lambda () #t)
+       (lambda ()
+-        (with-locale "sv_SE.utf8"
++        (with-locale "sv_SE.UTF-8"
+           (reload-module (resolve-module '(web uri)))
+           (uri=? (string->uri "http://www.example.com")
+                  #:scheme 'http #:host "www.example.com" #:path "")))
