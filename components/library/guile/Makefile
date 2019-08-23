@@ -64,7 +64,8 @@ install:	$(INSTALL_32_and_64)
 test:		$(TEST_32_and_64)
 
 # Build dependencies
-REQUIRED_PACKAGES += editor/gnu-emacs
+# The tests need an ISO-8859-1 locale to run in
+REQUIRED_PACKAGES += locale/en-extra
 
 # Auto-generated dependencies
 REQUIRED_PACKAGES += library/gc
