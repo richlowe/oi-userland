@@ -1,0 +1,83 @@
+--- /home/richlowe/Downloads/software/scsh-0.6.7/Makefile.in	2006-03-29 08:10:39.000000000 -0500
++++ scsh-0.6.7/Makefile.in	2011-06-19 07:26:40.017639104 -0400
+@@ -27,13 +27,14 @@
+ bindir = @bindir@
+ libdir = @libdir@
+ incdir = @includedir@
++sharedir = @sharedir@
+ manext = 1
+ mandir = @mandir@/man$(manext)
+ lib_dirs_list = @lib_dirs_list@
+ host = @host@
+ ### End of `configure' section###
+ 
+-htmldir = $(libdir)/scsh/doc/scsh-manual/html
++htmldir = $(sharedir)/scsh/doc/scsh-manual/html
+ 
+ # HP 9000 series, if you don't have gcc
+ #   CC = cc
+@@ -359,37 +360,37 @@
+ 
+ inst-doc:
+ 	for f in $(srcdir)/doc/*.txt $(srcdir)/doc/*.ps; do \
+-		$(INSTALL_DATA) $$f $(DESTDIR)$(LIB)/doc/; 			\
++		$(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/; 			\
+ 	done &&									\
+ 	for f in $(srcdir)/doc/src/*.tex 					\
+ 		$(srcdir)/doc/src/*.dvi						\
+ 		$(srcdir)/doc/src/*.ps;						\
+-		do $(INSTALL_DATA) $$f $(DESTDIR)$(LIB)/doc/s48-manual/;	\
++		do $(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/s48-manual/;	\
+ 	done &&									\
+ 	for f in $(srcdir)/doc/src/manual/*.html;				\
+-		do $(INSTALL_DATA) $$f $(DESTDIR)$(LIB)/doc/s48-manual/html/;	\
++		do $(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/s48-manual/html/;	\
+ 	done &&									\
+ 	for f in $(srcdir)/doc/scsh-manual/*.tex 				\
+ 		$(srcdir)/doc/scsh-manual/*.sty 				\
+ 		$(srcdir)/doc/scsh-manual/*.dvi					\
+ 		$(srcdir)/doc/scsh-manual/*.ps					\
+ 		$(srcdir)/doc/scsh-manual/*.pdf;				\
+-		do $(INSTALL_DATA) $$f $(DESTDIR)$(LIB)/doc/scsh-manual/;	\
++		do $(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/scsh-manual/;	\
+ 	done &&									\
+ 	for f in $(srcdir)/doc/scsh-manual/html/*.html 				\
+ 		$(srcdir)/doc/scsh-manual/html/*.gif 				\
+ 		$(srcdir)/doc/scsh-manual/html/*.css;				\
+-		do $(INSTALL_DATA) $$f $(DESTDIR)$(htmldir)/;			\
++		do $(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/scsh-manual/html; \
+ 	done &&									\
+ 	for f in $(srcdir)/doc/scsh-paper/*.tex 				\
+ 		$(srcdir)/doc/scsh-paper/*.sty 					\
+ 		$(srcdir)/doc/scsh-paper/*.dvi					\
+ 		$(srcdir)/doc/scsh-paper/*.ps;					\
+-		do $(INSTALL_DATA) $$f $(DESTDIR)$(LIB)/doc/scsh-paper/;	\
++		do $(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/scsh-paper/;	\
+ 	done &&									\
+ 	for f in $(srcdir)/doc/scsh-paper/html/*.html 				\
+ 		$(srcdir)/doc/scsh-paper/html/*.css;				\
+-		do $(INSTALL_DATA) $$f $(DESTDIR)$(LIB)/doc/scsh-paper/html;	\
++		do $(INSTALL_DATA) $$f $(DESTDIR)/$(prefix)/share/scsh/doc/scsh-paper/html;	\
+ 	done
+ 
+ 
+@@ -419,13 +420,16 @@
+ 	}								\
+ 	done &&								\
+ 	for dir in								\
+-		rts env big opt misc link srfi scsh doc/scsh-manual			\
+-		doc/s48-manual/html doc/scsh-paper/html cig; do			\
++		rts env big opt misc link srfi scsh cig; do			\
+ 		{ mkdir -p $(DESTDIR)$(LIB)/$$dir && [ -w $(DESTDIR)$(LIB)/$$dir ]; } || {	\
+ 			echo "$(DESTDIR)$(LIB)/$$dir not a writable directory" >&2; 	\
+ 		exit 1;						  		\
+ 		};							  	\
+-	done
++	done && \
++	for dir in \
++		doc/scsh-manual doc/s48-manual/html doc/scsh-paper/html; do \
++			mkdir -p $(DESTDIR)/$(prefix)/share/scsh/$$dir; \
++		done
+ 
+ configure: configure.in
+ 	autoheader && autoconf
